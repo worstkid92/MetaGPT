@@ -9,7 +9,17 @@
 from metagpt.actions import WritePRD
 from metagpt.actions.design_api import WriteDesign
 from metagpt.roles.role import Role
-
+from metagpt.utils.common import any_to_str_set, parse_recipient
+from metagpt.schema import (
+    CodePlanAndChangeContext,
+    CodeSummarizeContext,
+    CodingContext,
+    Document,
+    Documents,
+    Message,
+    RunCodeContext,
+    TestingContext
+)
 
 class Architect(Role):
     """
@@ -37,3 +47,24 @@ class Architect(Role):
 
         # Set events or actions the Architect should watch or be aware of
         self._watch({WritePRD})
+    
+    async def _act(self) -> Message:
+        result = await WriteDesign()
+        self.publish_message(
+            Message(
+                content=f"design finish",
+                role=self.profile,
+                cause_by=WriteDesign,
+                sent_from=self,
+                send_to="Edward",
+            )
+        ) 
+        self.publish_message(
+            Message(
+                content=f"design finish",
+                role=self.profile,
+                cause_by=WriteDesign,
+                sent_from=self,
+                send_to="Alex",
+            )
+        ) 

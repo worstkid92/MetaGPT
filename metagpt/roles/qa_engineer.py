@@ -15,7 +15,7 @@
     of SummarizeCode.
 """
 
-from metagpt.actions import DebugError, RunCode, WriteTest
+from metagpt.actions import DebugError, RunCode, WriteTest,DeployUK,WriteDesign
 from metagpt.actions.summarize_code import SummarizeCode
 from metagpt.const import MESSAGE_ROUTE_TO_NONE
 from metagpt.logs import logger
@@ -23,6 +23,9 @@ from metagpt.roles import Role
 from metagpt.schema import Document, Message, RunCodeContext, TestingContext
 from metagpt.utils.common import any_to_str_set, parse_recipient
 
+
+
+##https://forums.raspberrypi.com/viewtopic.php?t=347890
 
 class QaEngineer(Role):
     name: str = "Edward"
@@ -41,13 +44,13 @@ class QaEngineer(Role):
         # FIXME: a bit hack here, only init one action to circumvent _think() logic,
         #  will overwrite _think() in future updates
         self.set_actions([WriteTest])
-        self._watch([SummarizeCode, WriteTest, RunCode, DebugError])
+        self._watch([WriteDesign, DeployUK])
         self.test_round = 0
 
     async def _write_test(self, message: Message) -> None:
         src_file_repo = self.project_repo.with_src_path(self.context.src_workspace).srcs
         changed_files = set(src_file_repo.changed_files.keys())
-        # Unit tests only.
+        # Integration tests only.
         if self.config.reqa_file and self.config.reqa_file not in changed_files:
             changed_files.add(self.config.reqa_file)
         for filename in changed_files:

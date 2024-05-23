@@ -26,6 +26,9 @@ from metagpt.actions.di.execute_nb_code import ExecuteNbCode
 from metagpt.actions.di.write_analysis_code import WriteAnalysisCode
 from metagpt.actions.di.write_plan import WritePlan
 
+from metagpt.actions.build_uk import BuildUK
+from metagpt.actions.deploy_uk import DeployUK
+
 
 class ActionType(Enum):
     """All types of Actions, used for indexing."""
@@ -48,6 +51,9 @@ class ActionType(Enum):
     EXECUTE_NB_CODE = ExecuteNbCode
     WRITE_ANALYSIS_CODE = WriteAnalysisCode
     WRITE_PLAN = WritePlan
+
+    BUILD_UK = BuildUK
+    DEPLOY_UK = DeployUK
 
 
 __all__ = [

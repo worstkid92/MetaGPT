@@ -20,15 +20,17 @@
 from __future__ import annotations
 
 import json
+import os
 from collections import defaultdict
 from pathlib import Path
 from typing import Optional, Set
 
-from metagpt.actions import Action, WriteCode, WriteCodeReview, WriteTasks
+from metagpt.actions import Action, WriteCode, WriteCodeReview, WriteTasks,WriteTest
 from metagpt.actions.fix_bug import FixBug
 from metagpt.actions.project_management_an import REFINED_TASK_LIST, TASK_LIST
 from metagpt.actions.summarize_code import SummarizeCode
 from metagpt.actions.write_code_plan_and_change_an import WriteCodePlanAndChange
+from metagpt.actions.build_uk import BuildUK
 from metagpt.const import (
     BUGFIX_FILENAME,
     CODE_PLAN_AND_CHANGE_FILE_REPO,
@@ -45,6 +47,8 @@ from metagpt.schema import (
     Document,
     Documents,
     Message,
+    RunCodeContext,
+    TestingContext
 )
 from metagpt.utils.common import any_to_name, any_to_str, any_to_str_set
 
@@ -79,7 +83,7 @@ class Engineer(Role):
         "Use same language as user requirement"
     )
     n_borg: int = 1
-    use_code_review: bool = False
+    _use_build_repair: bool = False
     code_todos: list = []
     summarize_todos: list = []
     next_todo_action: str = ""
@@ -137,6 +141,51 @@ class Engineer(Role):
             logger.info("Nothing has changed.")
         return changed_files
 
+    async def _write_test(self, message: Message) -> None:
+        src_file_repo = self.project_repo.with_src_path(self.context.src_workspace).srcs
+        changed_files = set(src_file_repo.changed_files.keys())
+        # Integration tests only.
+        if self.config.reqa_file and self.config.reqa_file not in changed_files:
+            changed_files.add(self.config.reqa_file)
+        for filename in changed_files:
+            # write tests
+            if not filename or "test" in filename:
+                continue
+            code_doc = await src_file_repo.get(filename)
+            if not code_doc:
+                continue
+            test_doc = await self.project_repo.tests.get("test_" + code_doc.filename)
+            if not test_doc:
+                test_doc = Document(
+                    root_path=str(self.project_repo.tests.root_path), filename="test_" + code_doc.filename, content=""
+                )
+            logger.info(f"Writing {test_doc.filename}..")
+            context = TestingContext(filename=test_doc.filename, test_doc=test_doc, code_doc=code_doc)
+            context = await WriteTest(i_context=context, context=self.context, llm=self.llm).run()
+            await self.project_repo.tests.save_doc(
+                doc=context.test_doc, dependencies={context.code_doc.root_relative_path}
+            )
+
+            # prepare context for run tests in next round
+            run_code_context = RunCodeContext(
+                command=["python", context.test_doc.root_relative_path],
+                code_filename=context.code_doc.filename,
+                test_filename=context.test_doc.filename,
+                working_directory=str(self.project_repo.workdir),
+                additional_python_paths=[str(self.context.src_workspace)],
+            )
+            self.publish_message(
+                Message(
+                    content="\n".join(changed_files),
+                    role=self.profile,
+                    cause_by=WriteTest,
+                    sent_from=self,
+                    send_to=self,
+                )
+            )
+
+        logger.info(f"Done {str(self.project_repo.tests.workdir)} generating.")
+
     async def _act(self) -> Message | None:
         """Determines the mode of action based on whether code review is used."""
         if self.rc.todo is None:
@@ -145,11 +194,13 @@ class Engineer(Role):
             self.next_todo_action = any_to_name(WriteCode)
             return await self._act_code_plan_and_change()
         if isinstance(self.rc.todo, WriteCode):
-            self.next_todo_action = any_to_name(SummarizeCode)
+            self.next_todo_action = any_to_name(WriteTest)
             return await self._act_write_code()
-        if isinstance(self.rc.todo, SummarizeCode):
-            self.next_todo_action = any_to_name(WriteCode)
-            return await self._act_summarize()
+        if isinstance(self.rc.todo, WriteTest):
+            self.next_todo_action = any_to_name(BuildUK)
+            return await self._write_test()
+        if isinstance(self.rc.todo, BuildUK):
+            return await self._act_build()
         return None
 
     async def _act_write_code(self):
@@ -157,10 +208,61 @@ class Engineer(Role):
         return Message(
             content="\n".join(changed_files),
             role=self.profile,
-            cause_by=WriteCodeReview if self.use_code_review else WriteCode,
+            cause_by=BuildUK if self._use_build_repair else WriteCode,
             send_to=self,
             sent_from=self,
         )
+
+    async def _act_build(self, msg):
+        run_code_context = RunCodeContext.loads(msg.content)
+        src_makefile = await self.project_repo.with_src_path(self.context.src_workspace).srcs.get(
+            os.path.join(self.context.src_workspace,"Makefile")
+        ) 
+        if not src_makefile:
+            return
+        run_code_context.code = src_makefile.content
+        result = await BuildUK(i_context=run_code_context, context=self.context, llm=self.llm).run()
+        await self.project_repo.test_outputs.save(
+            filename=run_code_context.output_filename,
+            content=result.model_dump_json(),
+        )
+        run_code_context.code = None
+        run_code_context.test_code = None
+        # the recipient might be Engineer or myself
+        
+        is_pass, reason = await self._is_pass(result)
+        if not is_pass:
+            await self.project_repo.docs.code_summary.save(
+                    filename=run_code_context.output_filename,
+                    content=result.model_dump_json(),
+            )
+            self.next_todo_action = any_to_name(WriteCode)
+            self.publish_message(
+                Message(
+                    content=run_code_context.model_dump_json(),
+                    role=self.profile,
+                    cause_by=BuildUK,
+                    sent_from=self,
+                    send_to=self
+                )
+            )
+        else:
+            await self.project_repo.docs.code_summary.save(
+                    filename=run_code_context.output_filename,
+                    content=result.model_dump_json(),
+            )
+            self.next_todo_action = any_to_name(SummarizeCode)
+
+            self.publish_message(
+                Message(
+                    content=run_code_context.model_dump_json(),
+                    role=self.profile,
+                    cause_by=BuildUK,
+                    sent_from=self,
+                    send_to=self
+                )
+            )
+
 
     async def _act_summarize(self):
         tasks = []

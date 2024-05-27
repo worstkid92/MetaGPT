@@ -79,7 +79,7 @@ class Engineer(Role):
     profile: str = "Engineer"
     goal: str = "write elegant, readable, extensible, efficient code"
     constraints: str = (
-        "the code should conform to standards like google-style and be modular and maintainable. "
+        "the code should conform to standards like linux-style and be modular and maintainable. "
         "Use same language as user requirement"
     )
     n_borg: int = 1

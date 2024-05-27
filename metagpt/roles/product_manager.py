@@ -7,7 +7,7 @@
 @Modified By: mashenquan, 2023/11/27. Add `PrepareDocuments` action according to Section 2.2.3.5.1 of RFC 135.
 """
 
-from metagpt.actions import UserRequirement, WritePRD
+from metagpt.actions import UserRequirement, WritePRD,UserFeedback
 from metagpt.actions.prepare_documents import PrepareDocuments
 from metagpt.roles.role import Role
 from metagpt.utils.common import any_to_name
@@ -33,8 +33,8 @@ class ProductManager(Role):
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
 
-        self.set_actions([PrepareDocuments, WritePRD])
-        self._watch([UserRequirement, PrepareDocuments])
+        self.set_actions([WritePRD])
+        self._watch([UserRequirement, UserFeedback])
         self.todo_action = any_to_name(PrepareDocuments)
 
     async def _think(self) -> bool:

@@ -34,11 +34,12 @@ from metagpt.context_mixin import ContextMixin
 from metagpt.logs import logger
 from metagpt.memory import Memory
 from metagpt.provider import HumanProvider
-from metagpt.schema import Message, MessageQueue, SerializationMixin
+from metagpt.schema import Message, MessageQueue, SerializationMixin, TaskResult
 from metagpt.strategy.planner import Planner
 from metagpt.utils.common import any_to_name, any_to_str, role_raise_decorator
 from metagpt.utils.project_repo import ProjectRepo
 from metagpt.utils.repair_llm_raw_output import extract_state_value_from_output
+from tests.metagpt.actions.test_action_node import Task
 
 if TYPE_CHECKING:
     from metagpt.environment import Environment  # noqa: F401

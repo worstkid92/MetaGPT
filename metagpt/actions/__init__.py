@@ -28,6 +28,7 @@ from metagpt.actions.di.write_plan import WritePlan
 
 from metagpt.actions.build_uk import BuildUK
 from metagpt.actions.deploy_uk import DeployUK
+from metagpt.actions.add_feedback import UserFeedback
 
 
 class ActionType(Enum):

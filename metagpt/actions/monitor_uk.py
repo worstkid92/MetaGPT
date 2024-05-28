@@ -17,8 +17,8 @@ class MonitorUK(Action):
     name: str = "MonitorUK"
 
     async def run(self, *args, **kwargs):
-        ##method1.放到本地某个目录
-        ##method2.放到云上OBS
+        ##method1.用脚本检测
+        ##method2.输出结果到文件
         pass
         
     @staticmethod

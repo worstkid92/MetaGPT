@@ -13,7 +13,7 @@ from metagpt.schema import RunCodeContext, RunCodeResult
 from metagpt.utils.exceptions import handle_exception
 
 PROMPT_TEMPLATE = """
-Role: You are a senior development and automation engineer, your role is summarize the code build result.
+Role: You are a senior development and automation engineer, your role is summarize the OS image deployment result.
 If the running result does not include an error, you should explicitly approve the result.
 On the other hand, if the running result indicates some error, you should point out which part, the development code or the test code, produces the error,
 and give specific instructions on fixing the errors. Here is the code info:
@@ -22,31 +22,9 @@ Now you should begin your analysis
 ---
 ## instruction:
 Please summarize the cause of the errors and give correction instruction
-## File To Rewrite:
-Determine the ONE file to rewrite in order to fix the error, for example, xyz.py, or test_xyz.py
-## Status:
-Determine if all of the code works fine, if so write PASS, else FAIL,
-WRITE ONLY ONE WORD, PASS OR FAIL, IN THIS SECTION
-## Send To:
-Please write NoOne if there are no errors, Engineer if the errors are due to problematic development codes, else QaEngineer,
-WRITE ONLY ONE WORD, NoOne OR Engineer OR QaEngineer, IN THIS SECTION.
----
-You should fill in necessary instruction, status, send to, and finally return all content between the --- segment line.
 """
 
 TEMPLATE_CONTEXT = """
-## Development Code File Name
-{code_file_name}
-## Development Code
-```python
-{code}
-```
-## Test File Name
-{test_file_name}
-## Test Code
-```python
-{test_code}
-```
 ## Running Command
 {command}
 ## Running Output
@@ -61,11 +39,7 @@ standard errors:
 """
 
 command = """
-qemu-system-aarch64 \
--M raspi3b \
--cpu cortex-a53 \
--kernel kernel8.img \
--dtb bcm2710-rpi-3-b-plus.dtb \
+qemu-system-aarch64 -cpu cortex-a53 -machine raspi3b -nographic -kernel build/kernel8.img -dtb plat/raspi/bootfiles/bcm2710-rpi-3-b-plus.dtb
 """
 
 class DeployUK(Action):
@@ -76,7 +50,6 @@ class DeployUK(Action):
         working_directory = str(working_directory)
 
         
-
         # Start the subprocess
         process = subprocess.Popen(
             command, cwd=working_directory, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env

@@ -29,7 +29,7 @@ from metagpt.actions.di.write_plan import WritePlan
 from metagpt.actions.build_uk import BuildUK
 from metagpt.actions.deploy_uk import DeployUK
 from metagpt.actions.add_feedback import UserFeedback
-
+from metagpt.actions.write_integration_test import WriteIntegrationTest
 
 class ActionType(Enum):
     """All types of Actions, used for indexing."""

@@ -81,10 +81,6 @@ class BuildUK(Action):
         # Copy the current environment variables
         env = self.context.new_environ()
 
-        # Modify the PYTHONPATH environment variable
-        additional_python_paths = [working_directory] + additional_python_paths
-        additional_python_paths = ":".join(additional_python_paths)
-        env["PYTHONPATH"] = additional_python_paths + ":" + env.get("PYTHONPATH", "")
 
         # Start the subprocess
         process = subprocess.Popen(
@@ -103,14 +99,13 @@ class BuildUK(Action):
 
     async def run(self, *args, **kwargs) -> RunCodeResult:
         logger.info(f"Running {' '.join(self.i_context.command)}")
-        if self.i_context.mode == "script":
-            outs, errs = await self.run_script(
-                command=self.i_context.command,
-                working_directory=self.i_context.working_directory,
-                additional_python_paths=self.i_context.additional_python_paths,
-            )
-        elif self.i_context.mode == "text":
-            outs, errs = await self.run_text(code=self.i_context.code)
+
+        outs, errs = await self.run_script(
+            command=self.i_context.command,
+            working_directory=self.i_context.working_directory,
+            additional_python_paths=self.i_context.additional_python_paths,
+        )
+
 
         logger.info(f"{outs=}")
         logger.info(f"{errs=}")

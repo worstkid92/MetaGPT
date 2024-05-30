@@ -13,12 +13,11 @@ from metagpt.utils.common import any_to_str_set, parse_recipient
 import os
 
 class Automation_engineer(Role):
-    name: str = "Jokic"
+    name: str = "Luke"
     profile: str = "AutomationEngineer"
     goal: str = "Build and deploy software"
     constraints: str = (
-        "The test code you write should conform to code standard like PEP8, be modular, easy to read and maintain."
-        "Use same language as user requirement"
+        "Responsible for build and deploy Unikraft."
     )
     test_round_allowed: int = 5
     test_round: int = 0

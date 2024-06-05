@@ -14,7 +14,7 @@ app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 
 def generate_repo(
     idea,
-    investment=3.0,
+    investment=1000.0,
     n_round=5,
     code_review=True,
     run_tests=False,

@@ -18,9 +18,9 @@ LANGUAGE = ActionNode(
 
 PROGRAMMING_LANGUAGE = ActionNode(
     key="Programming Language",
-    expected_type=str,
-    instruction="Python/JavaScript or other mainstream programming language.",
-    example="Python",
+    expected_type="C",
+    instruction="using C lang.",
+    example="C",
 )
 
 ORIGINAL_REQUIREMENTS = ActionNode(

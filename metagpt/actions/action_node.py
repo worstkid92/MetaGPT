@@ -403,7 +403,7 @@ class ActionNode:
 
     @retry(
         wait=wait_random_exponential(min=1, max=20),
-        stop=stop_after_attempt(6),
+        stop=stop_after_attempt(1),
         after=general_after_log(logger),
     )
     async def _aask_v1(
@@ -417,6 +417,7 @@ class ActionNode:
         timeout=USE_CONFIG_TIMEOUT,
     ) -> (str, BaseModel):
         """Use ActionOutput to wrap the output of aask"""
+        print("asking " + prompt)
         content = await self.llm.aask(prompt, system_msgs, images=images, timeout=timeout)
         logger.debug(f"llm raw output:\n{content}")
         output_class = self.create_model_class(output_class_name, output_data_mapping)

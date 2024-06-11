@@ -15,14 +15,17 @@
     of SummarizeCode.
 """
 
-from metagpt.actions import DebugError, RunCode, WriteTest
+from metagpt.actions import DebugError, RunCode, WriteTest,DeployUK,WriteDesign,WriteIntegrationTest
 from metagpt.actions.summarize_code import SummarizeCode
 from metagpt.const import MESSAGE_ROUTE_TO_NONE
 from metagpt.logs import logger
 from metagpt.roles import Role
-from metagpt.schema import Document, Message, RunCodeContext, TestingContext
+from metagpt.schema import Document, Documents, Message, RunCodeContext, TestingContext
 from metagpt.utils.common import any_to_str_set, parse_recipient
 
+
+
+##https://forums.raspberrypi.com/viewtopic.php?t=347890
 
 class QaEngineer(Role):
     name: str = "Edward"
@@ -31,6 +34,7 @@ class QaEngineer(Role):
     constraints: str = (
         "The test code you write should conform to code standard like PEP8, be modular, easy to read and maintain."
         "Use same language as user requirement"
+        "Execute integration test case"
     )
     test_round_allowed: int = 5
     test_round: int = 0
@@ -40,33 +44,22 @@ class QaEngineer(Role):
 
         # FIXME: a bit hack here, only init one action to circumvent _think() logic,
         #  will overwrite _think() in future updates
-        self.set_actions([WriteTest])
+        self.set_actions([WriteIntegrationTest])
         self._watch([SummarizeCode, WriteTest, RunCode, DebugError])
         self.test_round = 0
 
     async def _write_test(self, message: Message) -> None:
         src_file_repo = self.project_repo.with_src_path(self.context.src_workspace).srcs
-        changed_files = set(src_file_repo.changed_files.keys())
-        # Unit tests only.
-        if self.config.reqa_file and self.config.reqa_file not in changed_files:
-            changed_files.add(self.config.reqa_file)
+        changed_files = Documents()
+
+        # Integration tests only.
         for filename in changed_files:
             # write tests
-            if not filename or "test" in filename:
-                continue
             code_doc = await src_file_repo.get(filename)
-            if not code_doc:
-                continue
-            if not code_doc.filename.endswith(".py"):
-                continue
-            test_doc = await self.project_repo.tests.get("test_" + code_doc.filename)
-            if not test_doc:
-                test_doc = Document(
-                    root_path=str(self.project_repo.tests.root_path), filename="test_" + code_doc.filename, content=""
-                )
-            logger.info(f"Writing {test_doc.filename}..")
-            context = TestingContext(filename=test_doc.filename, test_doc=test_doc, code_doc=code_doc)
-            context = await WriteTest(i_context=context, context=self.context, llm=self.llm).run()
+
+            logger.info(f"Writing {code_doc.filename}..")
+            context = TestingContext(filename=code_doc.filename, code_doc=code_doc)
+            context = await WriteIntegrationTest(i_context=context, context=self.context, llm=self.llm).run()
             await self.project_repo.tests.save_doc(
                 doc=context.test_doc, dependencies={context.code_doc.root_relative_path}
             )
@@ -83,7 +76,7 @@ class QaEngineer(Role):
                 Message(
                     content=run_code_context.model_dump_json(),
                     role=self.profile,
-                    cause_by=WriteTest,
+                    cause_by=WriteIntegrationTest,
                     sent_from=self,
                     send_to=self,
                 )
@@ -152,7 +145,7 @@ class QaEngineer(Role):
             return result_msg
 
         code_filters = any_to_str_set({SummarizeCode})
-        test_filters = any_to_str_set({WriteTest, DebugError})
+        test_filters = any_to_str_set({WriteIntegrationTest, DebugError})
         run_filters = any_to_str_set({RunCode})
         for msg in self.rc.news:
             # Decide what to do based on observed msg type, currently defined by human,

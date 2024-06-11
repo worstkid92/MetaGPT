@@ -14,12 +14,12 @@ app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 
 def generate_repo(
     idea,
-    investment=3.0,
+    investment=1000.0,
     n_round=5,
     code_review=True,
     run_tests=False,
     implement=True,
-    project_name="",
+    project_name="two_sum",
     inc=False,
     project_path="",
     reqa_file="",
@@ -104,7 +104,7 @@ def startup(
     if idea is None:
         typer.echo("Missing argument 'IDEA'. Run 'metagpt --help' for more information.")
         raise typer.Exit()
-
+    print(idea)
     return generate_repo(
         idea,
         investment,
@@ -112,7 +112,7 @@ def startup(
         code_review,
         run_tests,
         implement,
-        project_name,
+        "two_sum",
         inc,
         project_path,
         reqa_file,

@@ -17,6 +17,8 @@ GENERAL_FUNCTION_SCHEMA = {
                     "javascript",
                     "html",
                     "powershell",
+                    "C",
+                    "C++",
                 ],
             },
             "code": {"type": "string", "description": "The code to execute (required)"},

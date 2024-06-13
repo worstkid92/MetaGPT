@@ -14,12 +14,12 @@ app = typer.Typer(add_completion=False, pretty_exceptions_show_locals=False)
 
 def generate_repo(
     idea,
-    investment=3.0,
+    investment=1000.0,
     n_round=5,
     code_review=True,
     run_tests=False,
     implement=True,
-    project_name="",
+    project_name="two_sum",
     inc=False,
     project_path="",
     reqa_file="",
@@ -48,14 +48,11 @@ def generate_repo(
                 ProductManager(),
                 Architect(),
                 ProjectManager(),
+                QaEngineer(),
+                Engineer(n_borg=5, use_code_review=code_review)
             ]
         )
 
-        if implement or code_review:
-            company.hire([Engineer(n_borg=5, use_code_review=code_review)])
-
-        if run_tests:
-            company.hire([QaEngineer()])
     else:
         stg_path = Path(recover_path)
         if not stg_path.exists() or not str(stg_path).endswith("team"):
@@ -104,15 +101,15 @@ def startup(
     if idea is None:
         typer.echo("Missing argument 'IDEA'. Run 'metagpt --help' for more information.")
         raise typer.Exit()
-
+    print(idea)
     return generate_repo(
         idea,
         investment,
         n_round,
         code_review,
-        run_tests,
+        True,
         implement,
-        project_name,
+        "two_sum",
         inc,
         project_path,
         reqa_file,

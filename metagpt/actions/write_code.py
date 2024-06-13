@@ -139,7 +139,8 @@ class WriteCode(Action):
                 summary_log=summary_doc.content if summary_doc else "",
             )
         logger.info(f"Writing {coding_context.filename}..")
-        code = await self.write_code(prompt)
+        # code = await self.write_code(prompt)
+        code = "xxx"
         if not coding_context.code_doc:
             # avoid root_path pydantic ValidationError if use WriteCode alone
             root_path = self.context.src_workspace if self.context.src_workspace else ""

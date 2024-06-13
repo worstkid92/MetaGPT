@@ -19,15 +19,15 @@ LANGUAGE = ActionNode(
 PROGRAMMING_LANGUAGE = ActionNode(
     key="Programming Language",
     expected_type=str,
-    instruction="Python/JavaScript or other mainstream programming language.",
-    example="Python",
+    instruction="C/C++",
+    example="C++",
 )
 
 ORIGINAL_REQUIREMENTS = ActionNode(
     key="Original Requirements",
     expected_type=str,
     instruction="Place the original user's requirements here.",
-    example="Create a 2048 game",
+    example="calculate sum of two numbers",
 )
 
 REFINED_REQUIREMENTS = ActionNode(

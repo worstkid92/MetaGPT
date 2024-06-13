@@ -1,0 +1,49 @@
+(base) root@ecs-d5c0:/mnt/codes/metagpt/MetaGPT# echo "" > tmp.txt && export METAGPT_PROJECT_ROOT=/mnt/codes/metagpt/MetaGPT/; python /mnt/codes/metagpt/MetaGPT/metagpt/software_company.py --project-name="two_sum" 'generate a programme to calculate sum of two numbers in C++' >> tmp.txt
+2024-06-11 18:28:01.243 | INFO     | metagpt.const:get_metagpt_root:39 - PROJECT_ROOT set from environment variable to /mnt/codes/metagpt/MetaGPT
+2024-06-11 18:28:04.318 | INFO     | metagpt.roles.engineer:__init__:94 - init engineer
+2024-06-11 18:28:04.318 | INFO     | metagpt.team:invest:93 - Investment: $3.0.
+2024-06-11 18:28:04.320 | INFO     | metagpt.roles.role:_act:402 - Alice(Product Manager): to do PrepareDocuments(PrepareDocuments)
+2024-06-11 18:28:04.338 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/requirement.txt
+2024-06-11 18:28:04.338 | INFO     | metagpt.roles.role:_act:402 - Alice(Product Manager): to do WritePRD(WritePRD)
+2024-06-11 18:28:04.339 | INFO     | metagpt.actions.write_prd:run:86 - New requirement detected: generate a programme to calculate sum of two numbers in C++
+2024-06-11 18:32:19.060 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:32:19.068 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/prd/20240611183219.json
+no mermaid
+2024-06-11 18:32:19.069 | WARNING  | metagpt.utils.mermaid:mermaid_to_file:35 - RUN `npm install -g @mermaid-js/mermaid-cli` to install mmdc,or consider changing engine to `playwright`, `pyppeteer`, or `ink`.
+2024-06-11 18:32:19.070 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/resources/prd/20240611183219.md
+2024-06-11 18:32:19.072 | INFO     | metagpt.roles.role:_act:402 - Bob(Architect): to do WriteDesign(WriteDesign)
+2024-06-11 18:32:33.763 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:32:33.767 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/system_design/20240611183219.json
+2024-06-11 18:32:33.767 | INFO     | metagpt.utils.file_repository:save:62 - update dependency: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/system_design/20240611183219.json:{'docs/prd/20240611183219.json'}
+no mermaid
+2024-06-11 18:32:33.769 | WARNING  | metagpt.utils.mermaid:mermaid_to_file:35 - RUN `npm install -g @mermaid-js/mermaid-cli` to install mmdc,or consider changing engine to `playwright`, `pyppeteer`, or `ink`.
+2024-06-11 18:32:33.769 | INFO     | metagpt.actions.design_api:_save_data_api_design:107 - Save class view to /mnt/codes/metagpt/MetaGPT/workspace/two_sum/resources/data_api_design/20240611183219
+no mermaid
+2024-06-11 18:32:33.770 | WARNING  | metagpt.utils.mermaid:mermaid_to_file:35 - RUN `npm install -g @mermaid-js/mermaid-cli` to install mmdc,or consider changing engine to `playwright`, `pyppeteer`, or `ink`.
+2024-06-11 18:32:33.770 | INFO     | metagpt.actions.design_api:_save_seq_flow:116 - Saving sequence flow to /mnt/codes/metagpt/MetaGPT/workspace/two_sum/resources/seq_flow/20240611183219
+2024-06-11 18:32:33.771 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/resources/system_design/20240611183219.md
+2024-06-11 18:32:33.773 | INFO     | metagpt.roles.role:_act:402 - Eve(Project Manager): to do WriteTasks(WriteTasks)
+2024-06-11 18:36:48.560 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:36:48.566 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/task/20240611183219.json
+2024-06-11 18:36:48.567 | INFO     | metagpt.utils.file_repository:save:62 - update dependency: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/docs/task/20240611183219.json:{'docs/system_design/20240611183219.json'}
+2024-06-11 18:36:48.568 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/requirements.txt
+2024-06-11 18:36:48.588 | INFO     | metagpt.roles.engineer:_act:198 - line 197..
+2024-06-11 18:36:48.588 | INFO     | metagpt.roles.engineer:_act_write_code:209 - Writing act write code..
+2024-06-11 18:36:48.589 | INFO     | metagpt.actions.write_code:run:141 - Writing game.py..
+2024-06-11 18:41:03.461 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:41:03.463 | INFO     | metagpt.actions.write_code_review:run:185 - Code review and rewrite game.py: 1/2 | len(iterative_code)=15, len(self.i_context.code_doc.content)=15
+2024-06-11 18:45:19.601 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:45:19.602 | INFO     | metagpt.actions.write_code_review:run:185 - Code review and rewrite game.py: 2/2 | len(iterative_code)=0, len(self.i_context.code_doc.content)=15
+2024-06-11 18:49:34.488 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:49:34.491 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/two_sum/game.py
+2024-06-11 18:49:34.492 | INFO     | metagpt.utils.file_repository:save:62 - update dependency: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/two_sum/game.py:['docs/system_design/20240611183219.json', 'docs/task/20240611183219.json']
+2024-06-11 18:49:34.493 | INFO     | metagpt.actions.write_code:run:141 - Writing main.py..
+2024-06-11 18:53:49.288 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:53:49.290 | INFO     | metagpt.actions.write_code_review:run:185 - Code review and rewrite main.py: 1/2 | len(iterative_code)=139, len(self.i_context.code_doc.content)=139
+2024-06-11 18:54:11.476 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:58:27.324 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 18:58:27.326 | INFO     | metagpt.actions.write_code_review:run:185 - Code review and rewrite main.py: 2/2 | len(iterative_code)=139, len(self.i_context.code_doc.content)=139
+2024-06-11 19:02:43.098 | WARNING  | metagpt.utils.cost_manager:update_cost:49 - Model cpp-llama not found in TOKEN_COSTS.
+2024-06-11 19:02:43.101 | INFO     | metagpt.utils.file_repository:save:57 - save to: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/two_sum/main.py
+2024-06-11 19:02:43.103 | INFO     | metagpt.utils.file_repository:save:62 - update dependency: /mnt/codes/metagpt/MetaGPT/workspace/two_sum/two_sum/main.py:['docs/system_design/20240611183219.json', 'docs/task/20240611183219.json']
+2024-06-11 19:02:43.114 | INFO     | metagpt.utils.git_repository:archive:168 - Archive: ['.dependencies.json', 'docs/prd/20240611183219.json', 'docs/requirement.txt', 'docs/system_design/20240611183219.json', 'docs/task/20240611183219.json', 'requirements.txt', 'resources/competitive_analysis/20240611183219.mmd', 'resources/data_api_design/20240611183219.mmd', 'resources/prd/20240611183219.md', 'resources/seq_flow/20240611183219.mmd', 'resources/system_design/20240611183219.md', 'two_sum/game.py', 'two_sum/main.py']

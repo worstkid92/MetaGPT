@@ -27,13 +27,13 @@ REFINED_IMPLEMENTATION_APPROACH = ActionNode(
 )
 
 PROJECT_NAME = ActionNode(
-    key="Project name", expected_type=str, instruction="The project name with underline", example="game_2048"
+    key="Project name", expected_type=str, instruction="The project name with underline", example="two_sum"
 )
 
 FILE_LIST = ActionNode(
     key="File list",
     expected_type=List[str],
-    instruction="Only need relative paths. ALWAYS write a main.py or app.py here",
+    instruction="Only need relative paths. ALWAYS write a main.cpp",
     example=["main.py", "game.py"],
 )
 

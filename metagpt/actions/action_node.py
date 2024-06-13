@@ -450,6 +450,9 @@ class ActionNode:
         self, schema, mode, images: Optional[Union[str, list[str]]] = None, timeout=USE_CONFIG_TIMEOUT, exclude=None
     ):
         prompt = self.compile(context=self.context, schema=schema, mode=mode, exclude=exclude)
+        print("yyyyyyyyyyyyyyyyyyyyy before prompt yyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        print(prompt)
+        print("yyyyyyyyyyyyyyyyyyyyy after prompt yyyyyyyyyyyyyyyyyyyyyyyyyyy")
         if schema != "raw":
             mapping = self.get_mapping(mode, exclude=exclude)
             class_name = f"{self.key}_AN"
@@ -461,7 +464,10 @@ class ActionNode:
         else:
             self.content = await self.llm.aask(prompt)
             self.instruct_content = None
-
+        print("yyyyyyyyyyyyyyyyyyyyy before return yyyyyyyyyyyyyyyyyyyyyyyyyyy")
+        print(self.content)
+        print(self.instruct_content)
+        print("yyyyyyyyyyyyyyyyyyyyy after return  yyyyyyyyyyyyyyyyyyyyyyyyyyy")
         return self
 
     async def fill(
@@ -500,19 +506,24 @@ class ActionNode:
         if self.schema:
             schema = self.schema
 
+        print("zzzzzzzzzzzzzzzzzzzzzzz context")
+        print(self.context)
+        print("zzzzzzzzzzzzzzzzzzzzzzz context")
+
+
         if strgy == "simple":
             return await self.simple_fill(schema=schema, mode=mode, images=images, timeout=timeout, exclude=exclude)
-        elif strgy == "complex":
-            # 这里隐式假设了拥有children
-            tmp = {}
-            for _, i in self.children.items():
-                if exclude and i.key in exclude:
-                    continue
-                child = await i.simple_fill(schema=schema, mode=mode, images=images, timeout=timeout, exclude=exclude)
-                tmp.update(child.instruct_content.model_dump())
-            cls = self._create_children_class()
-            self.instruct_content = cls(**tmp)
-            return self
+        # elif strgy == "complex":
+        #     # 这里隐式假设了拥有children
+        #     tmp = {}
+        #     for _, i in self.children.items():
+        #         if exclude and i.key in exclude:
+        #             continue
+        #         child = await i.simple_fill(schema=schema, mode=mode, images=images, timeout=timeout, exclude=exclude)
+        #         tmp.update(child.instruct_content.model_dump())
+        #     cls = self._create_children_class()
+        #     self.instruct_content = cls(**tmp)
+        #     return self
 
     async def human_review(self) -> dict[str, str]:
         review_comments = HumanInteraction().interact_with_instruct_content(

@@ -13,10 +13,10 @@ from loguru import logger as _logger
 
 from metagpt.const import METAGPT_ROOT
 
-_print_level = "INFO"
+_print_level = "DEBUG"
 
 
-def define_log_level(print_level="INFO", logfile_level="DEBUG", name: str = None):
+def define_log_level(print_level="DEBUG", logfile_level="DEBUG", name: str = None):
     """Adjust the log level to above level"""
     global _print_level
     _print_level = print_level
@@ -44,5 +44,5 @@ def set_llm_stream_logfunc(func):
 
 
 def _llm_stream_log(msg):
-    if _print_level in ["INFO"]:
+    if _print_level in ["DEBUG"]:
         print(msg, end="")

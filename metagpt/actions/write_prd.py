@@ -104,6 +104,9 @@ class WritePRD(Action):
         """handle new requirement"""
         project_name = self.project_name
         context = CONTEXT_TEMPLATE.format(requirements=req, project_name=project_name)
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        print(context)
+        print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
         exclude = [PROJECT_NAME.key] if project_name else []
         node = await WRITE_PRD_NODE.fill(context=context, llm=self.llm, exclude=exclude)  # schema=schema
         await self._rename_workspace(node)

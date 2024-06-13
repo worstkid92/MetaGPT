@@ -186,9 +186,10 @@ class WriteCodeReview(Action):
                 f"Code review and rewrite {self.i_context.code_doc.filename}: {i + 1}/{k} | len(iterative_code)={len1}, "
                 f"len(self.i_context.code_doc.content)={len2}"
             )
-            result, rewrited_code = await self.write_code_review_and_rewrite(
-                context_prompt, cr_prompt, self.i_context.code_doc.filename
-            )
+            # result, rewrited_code = await self.write_code_review_and_rewrite(
+            #     context_prompt, cr_prompt, self.i_context.code_doc.filename
+            # )
+            result, rewrited_code = "ok","ok"
             if "LBTM" in result:
                 iterative_code = rewrited_code
             elif "LGTM" in result:

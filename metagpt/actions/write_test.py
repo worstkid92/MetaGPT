@@ -40,7 +40,7 @@ you should correctly import the necessary classes based on these file locations!
 class WriteTest(Action):
     name: str = "WriteTest"
     i_context: Optional[TestingContext] = None
-
+    logger.info("write test Engineer")
     async def write_code(self, prompt):
         code_rsp = await self._aask(prompt)
 

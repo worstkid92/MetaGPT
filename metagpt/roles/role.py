@@ -531,6 +531,7 @@ class Role(SerializationMixin, ContextMixin, BaseModel):
 
     @role_raise_decorator
     async def run(self, with_message=None) -> Message | None:
+        logger.info(f"{self.name} is observe")
         """Observe, and think and act based on the results of the observation"""
         if with_message:
             msg = None
@@ -543,11 +544,12 @@ class Role(SerializationMixin, ContextMixin, BaseModel):
             if not msg.cause_by:
                 msg.cause_by = UserRequirement
             self.put_message(msg)
-        if not await self._observe():
+        msg_num = await self._observe()
+        if not msg_num:
             # If there is no new information, suspend and wait
             logger.debug(f"{self._setting}: no news. waiting.")
             return
-
+        logger.info(msg_num)
         rsp = await self.react()
 
         # Reset the next action to be taken.
